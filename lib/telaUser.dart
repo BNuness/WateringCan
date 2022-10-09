@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/telaSensor.dart';
+import 'package:flutter_application_3/telaHistorico.dart';
 
 import 'loginpage.dart';
 
@@ -58,9 +60,17 @@ class user extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   textStyle: const TextStyle(fontSize: 36),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Sensor()),
+                  );
+
+
+
+                },
                 child: const Text(
-                  'Em Contrução',
+                  'Sensor',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 5, 61, 7),
@@ -71,6 +81,39 @@ class user extends StatelessWidget {
                 ),
               ),
             ),
+
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              height: 100,
+              alignment: Alignment.center,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  textStyle: const TextStyle(fontSize: 36),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Historico()),
+                  );
+                },
+                child: const Text(
+                  'Histórico',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 5, 61, 7),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'Rancho',
+                  ),
+                ),
+              ),
+            ),
+
+
+
             SizedBox(
               height: 50,
             ),

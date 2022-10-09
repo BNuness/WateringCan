@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_3/home.dart';
-import 'package:flutter_application_3/telaUsuario.dart';
+import 'package:flutter_application_3/telaUser.dart';
 
 class login extends StatelessWidget {
   var user1 = "teste"; // campo de comparação
