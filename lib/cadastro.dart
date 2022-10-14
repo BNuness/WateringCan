@@ -1,10 +1,33 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/home.dart';
+import 'package:flutter_application_3/main.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
-class cadastro extends StatelessWidget {
-  const cadastro({Key? key}) : super(key: key);
+import 'home.dart';
+
+void cadastrar() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final keyApplicationId = 'KFCvwGfsqOY4FcEqwfoHZrraw94mZpPCKnsCCiPq';
+  final keyClientKey = 'GUPCMIHLimKOKsJtJDGbBBqHPGdEKJnYWrabAfsk';
+  final keyParseServerUrl = 'https://parseapi.back4app.com';
+
+  await Parse().initialize(keyApplicationId, keyParseServerUrl,
+      clientKey: keyClientKey, debug: true);
+
+  runApp(cadastro());
+}
+
+class cadastro extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<cadastro> {
+  final controllerUsername = TextEditingController();
+  final controllerPassword = TextEditingController();
+  final controllerEmail = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +69,7 @@ class cadastro extends StatelessWidget {
               height: 60,
             ),
             TextFormField(
+              controller: controllerUsername,
               autofocus: true,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
@@ -81,9 +105,10 @@ class cadastro extends StatelessWidget {
               height: 25,
             ),
             TextFormField(
+              controller: controllerEmail,
               autofocus: true,
               keyboardType: TextInputType.text,
-              obscureText: true,
+              obscureText: false,
               decoration: InputDecoration(
                   labelText: "E-mail",
                   border: OutlineInputBorder(
@@ -99,6 +124,7 @@ class cadastro extends StatelessWidget {
               height: 25,
             ),
             TextFormField(
+              controller: controllerPassword,
               autofocus: true,
               keyboardType: TextInputType.text,
               obscureText: true,
@@ -142,7 +168,7 @@ class cadastro extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   textStyle: const TextStyle(fontSize: 39),
                 ),
-                onPressed: () {},
+                onPressed: () => doUserRegistration(),
                 child: const Text(
                   'Cadastrar',
                   textAlign: TextAlign.center,
@@ -188,5 +214,61 @@ class cadastro extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showSuccess() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Success!"),
+          content: const Text("User was successfully created!"),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showError(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Error!"),
+          content: Text(errorMessage),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void doUserRegistration() async {
+    final username = controllerUsername.text.trim();
+    final email = controllerEmail.text.trim();
+    final password = controllerPassword.text.trim();
+
+    final user = ParseUser.createUser(username, password, email);
+
+    var response = await user.signUp();
+
+    if (response.success) {
+      showSuccess();
+    } else {
+      showError(response.error!.message);
+    }
   }
 }
