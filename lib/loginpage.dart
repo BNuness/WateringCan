@@ -1,23 +1,37 @@
 // ignore_for_file: prefer_const_constructors, file_names
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_3/home.dart';
 import 'package:flutter_application_3/telaUser.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
-class login extends StatelessWidget {
-  var user1 = "teste"; // campo de comparação
-  var senha = "123"; // campo de comparação
-  var usuario = TextEditingController();
-  var passwd = TextEditingController();
+void logar() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  //const ({ Key? key }) : super(key: key);
+  final keyApplicationId = 'YOUR_APP_ID_HERE';
+  final keyClientKey = 'YOUR_CLIENT_KEY_HERE';
+  final keyParseServerUrl = 'https://parseapi.back4app.com';
 
-  void limpar() {
+  await Parse().initialize(keyApplicationId, keyParseServerUrl,
+      clientKey: keyClientKey, debug: true);
+
+  runApp(login());
+}
+
+class login extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<login> {
+  final controllerUsername = TextEditingController();
+  final controllerPassword = TextEditingController();
+  bool isLoggedIn = false;
+
+  /*void limpar() {
     usuario.text = '';
     passwd.text = '';
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +72,11 @@ class login extends StatelessWidget {
               height: 60,
             ),
             TextFormField(
-              controller: usuario,
+              controller: controllerUsername,
               autofocus: true,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                  labelText: "Login",
+                  labelText: "Usuário",
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(
@@ -76,7 +90,7 @@ class login extends StatelessWidget {
               height: 25,
             ),
             TextFormField(
-              controller: passwd,
+              controller: controllerPassword,
               autofocus: true,
               keyboardType: TextInputType.text,
               obscureText: true,
@@ -102,75 +116,7 @@ class login extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   textStyle: const TextStyle(fontSize: 36),
                 ),
-                onPressed: () {
-                  if (usuario.text.isNotEmpty && passwd.text.isNotEmpty) {
-                    if (usuario.text == user1 && passwd.text == senha) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => user(),
-                        ),
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("Erro!!!"),
-                          content: Text(
-                            "Usuário e/ou senha inválidos!!!",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Rancho',
-                            ),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(
-                                    context,
-                                  );
-                                  limpar();
-                                },
-                                child: Text("OK")),
-                          ],
-                        ),
-                      );
-                    }
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Erro!!!"),
-                        content: Text(
-                          "Usuário e/ou senha inválidos!!!",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            fontFamily: 'Rancho',
-                          ),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(
-                                  context,
-                                );
-                                //limpar();
-                              },
-                              child: Text("OK"))
-                        ],
-                      ),
-                    );
-                  }
-
-                  /*Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => user()),
-                  );*/
-                },
+                onPressed: () => doUserLogin(),
                 child: const Text(
                   'Acessar',
                   textAlign: TextAlign.center,
@@ -215,6 +161,178 @@ class login extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void showSuccess(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Successo!"),
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 30,
+          ),
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              fontFamily: 'Rancho',
+              fontSize: 25,
+            ),
+          ),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Rancho',
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => user()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showError(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Error!"),
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 30,
+          ),
+          contentTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 25,
+          ),
+          content: Text(errorMessage),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Rancho',
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void doUserLogin() async {
+    final email = controllerUsername.text.trim();
+    final password = controllerPassword.text.trim();
+
+    final user = ParseUser(email, password, null);
+
+    if (controllerUsername.text.isEmpty || controllerPassword.text.isEmpty) {
+      camposVazios();
+    } else {
+      var response = await user.login();
+
+      if (response.success) {
+        showSuccess("Usuário Logado!",
+
+        
+        );
+      } else {
+        showError(response.error!.message);
+      }
+    }
+  }
+
+  /*void doUserLogout() async {
+    final user = await ParseUser.currentUser() as ParseUser;
+    var response = await user.logout();
+
+    if (response.success) {
+      showSuccess("User was successfully logout!");
+      setState(() {
+        isLoggedIn = false;
+      });
+    } else {
+      showError(response.error!.message);
+    }
+  }*/
+
+  void camposVazios() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Erro!"),
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 30,
+          ),
+          content: Text("Preencha todos os campos!"),
+          contentTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 25,
+          ),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text(
+                "OK",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Rancho',
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -25,9 +25,10 @@ class cadastro extends StatefulWidget {
 }
 
 class _HomePageState extends State<cadastro> {
-  final controllerUsername = TextEditingController();
-  final controllerPassword = TextEditingController();
-  final controllerEmail = TextEditingController();
+  final controllerUsername = TextEditingController(text: "");
+  final controllerPassword = TextEditingController(text: "");
+  final controllerEmail = TextEditingController(text: "");
+  //final controllerTel = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,7 @@ class _HomePageState extends State<cadastro> {
               autofocus: true,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                  labelText: "Nome",
+                  labelText: "Usuário",
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(
@@ -86,7 +87,8 @@ class _HomePageState extends State<cadastro> {
             SizedBox(
               height: 25,
             ),
-            TextFormField(
+            /*TextFormField(
+              controller: controllerTel,
               autofocus: true,
               keyboardType: TextInputType.text,
               obscureText: true,
@@ -103,7 +105,7 @@ class _HomePageState extends State<cadastro> {
             ),
             SizedBox(
               height: 25,
-            ),
+            ),*/
             TextFormField(
               controller: controllerEmail,
               autofocus: true,
@@ -139,7 +141,7 @@ class _HomePageState extends State<cadastro> {
                   )),
               style: TextStyle(fontSize: 25),
             ),
-            SizedBox(
+            /*SizedBox(
               height: 25,
             ),
             TextFormField(
@@ -156,7 +158,7 @@ class _HomePageState extends State<cadastro> {
                     fontSize: 30,
                   )),
               style: TextStyle(fontSize: 25),
-            ),
+            ),*/
             SizedBox(
               height: 50,
             ),
@@ -221,11 +223,35 @@ class _HomePageState extends State<cadastro> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Success!"),
-          content: const Text("User was successfully created!"),
+          title: const Text("Successo!"),
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 30,
+          ),
+          content: const Text("Usuário Criado com Sucesso!"),
+          contentTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 25,
+          ),
           actions: <Widget>[
             new TextButton(
-              child: const Text("OK"),
+              child: const Text("OK",
+              textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Rancho',
+                  fontSize: 20,
+                ),
+              
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -242,10 +268,34 @@ class _HomePageState extends State<cadastro> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Error!"),
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 30,
+          ),
           content: Text(errorMessage),
+          contentTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 25,
+          ),
           actions: <Widget>[
             new TextButton(
-              child: const Text("OK"),
+              child: const Text(
+                "OK",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Rancho',
+                  fontSize: 20,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -260,15 +310,73 @@ class _HomePageState extends State<cadastro> {
     final username = controllerUsername.text.trim();
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
+    //final phone = controllerPassword.text.trim();
 
-    final user = ParseUser.createUser(username, password, email);
-
-    var response = await user.signUp();
-
-    if (response.success) {
-      showSuccess();
+    if (controllerUsername.text.isEmpty ||
+        controllerEmail.text.isEmpty ||
+        controllerPassword.text.isEmpty) {
+      camposVazios();
     } else {
-      showError(response.error!.message);
+      final user = ParseUser.createUser(username, password, email);
+
+      var response = await user.signUp();
+
+      if (response.success) {
+        showSuccess();
+        limpaCampos();
+      } else {
+        showError(response.error!.message);
+      }
     }
+  }
+
+  void camposVazios() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Erro!"),
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 30,
+          ),
+          content: Text("Preencha todos os campos!"),
+          contentTextStyle: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'Rancho',
+            fontSize: 25,
+          ),
+          actions: <Widget>[
+            new TextButton(
+              child: const Text(
+                "OK",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Rancho',
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void limpaCampos() {
+    controllerEmail.text = "";
+    controllerPassword.text = "";
+    controllerUsername.text = "";
   }
 }
