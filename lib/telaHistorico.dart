@@ -33,7 +33,7 @@ class Historico extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 50,
+              width: 10,
             ),
             Text(
               "WateringCan",
@@ -44,15 +44,15 @@ class Historico extends StatelessWidget {
                   //fontStyle: FontStyle.italic,
                   fontFamily: 'Rancho'),
             ),
-            SizedBox(
+            /*SizedBox(
               height: 60,
-            ),
+            ),*/
             SizedBox(
-              height: 50,
+              height: 20, //50
             ),
             Container(
               height: 100,
-              alignment: Alignment.center,
+              alignment: Alignment.topLeft,
               child: TextButton(
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(16.0),
@@ -60,7 +60,7 @@ class Historico extends StatelessWidget {
                 ),
                 onPressed: () {},
                 child: const Text(
-                  'Em construção',
+                  'Histórico',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 5, 61, 7),
@@ -72,7 +72,71 @@ class Historico extends StatelessWidget {
               ),
             ),
 
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 100,
+              alignment: Alignment.center,
+              child:Table(
+            border: TableBorder.all(width:1, color:Colors.black45), //table border
+            children: [
+              
+
+              TableRow(
+                   children: [
+                      TableCell(child: Text("Sensor:")),
+                      TableCell(child: Text("Data:")),
+                      TableCell(child: Text("Hora Liga:")),
+                      TableCell(child: Text("Umidade:")),
+                      //TableCell(child: Text("Hora:")),
+                     // TableCell(child: Text("Umidade:")),
+                   ]
+                 ),
+
+                 /*TableRow(
+                   children: [
+                      TableCell(child: Text("1.")),
+                      TableCell(child: Text("Krishna Karki")),
+                      TableCell(child: Text("Nepal, Kathmandu")),
+                      TableCell(child: Text("Nepal"))
+                   ]
+                 ),
+                 
+                 TableRow(
+                   children: [
+                      TableCell(child: Text("2.")),
+                      TableCell(child: Text("John Wick")),
+                      TableCell(child: Text("New York, USA")),
+                      TableCell(child: Text("USA"))
+                   ]
+                 ),
+
+                 TableRow(
+                   children: [
+                      TableCell(child: Text("3.")),
+                      TableCell(child: Text("Fedrick May")),
+                      TableCell(child: Text("Berlin, Germany")),
+                      TableCell(child: Text("Germany"))
+                   ]
+                 ),*/
+
+            ],),
+
+
+              
+
+
+
+
+
+            ),
+
             
+
+
+
+
 
 
             SizedBox(

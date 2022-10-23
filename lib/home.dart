@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_3/loginpage.dart';
 import 'package:flutter_application_3/cadastro.dart';
+import 'package:flutter_application_3/telaUser.dart';
+import 'package:flutter_application_3/teste.dart';
 
 class home extends StatelessWidget {
   //const home({Key? key}) : super(key: key);
@@ -102,8 +104,45 @@ class home extends StatelessWidget {
               ),
             ),
             SizedBox(
+              height: 40, //150
+            ),
+
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              height: 100,
+              alignment: Alignment.center,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  textStyle: const TextStyle(fontSize: 28),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => teste()),
+                  );
+                },
+                child: const Text(
+                  'Tela',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'Rancho',
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
               height: 150,
             ),
+
+
+
+
             Container(
               height: 100,
               alignment: Alignment.center,

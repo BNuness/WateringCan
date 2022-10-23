@@ -82,9 +82,48 @@ class user extends StatelessWidget {
               ),
             ),
 
+
             SizedBox(
-              height: 50,
+              height: 40,
             ),
+            /*Container(
+              height: 100,
+              alignment: Alignment.center,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  textStyle: const TextStyle(fontSize: 36),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Historico()),
+                  );
+                },
+                child: const Text(
+                  'Acionamento',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 5, 61, 7),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'Rancho',
+                  ),
+                ),
+              ),
+            ),
+
+
+
+            SizedBox(
+              height: 40,
+            ),*/
+
+
+
+
+
+           
             Container(
               height: 100,
               alignment: Alignment.center,
