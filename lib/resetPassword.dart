@@ -5,7 +5,8 @@ import 'package:flutter_application_3/home.dart';
 import 'package:flutter_application_3/telaUser.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
-void logar() async {
+
+void resetar() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final keyApplicationId = 'YOUR_APP_ID_HERE';
@@ -15,27 +16,45 @@ void logar() async {
   await Parse().initialize(keyApplicationId, keyParseServerUrl,
       clientKey: keyClientKey, debug: true);
 
-  runApp(login());
+  runApp(reset());
 }
 
-class login extends StatefulWidget {
+
+
+class reset extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<login> {
-  final controllerUsername = TextEditingController();
-  final controllerPassword = TextEditingController();
-  bool isLoggedIn = false;
 
-  /*void limpar() {
-    usuario.text = '';
-    passwd.text = '';
-  }*/
+
+class _HomePageState extends State<reset> {
+  final controllerEmail = TextEditingController();
+
+  
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    void doUserResetPassword() async {
+    final ParseUser user = ParseUser(null, null, controllerEmail.text.trim());
+    final ParseResponse parseResponse = await user.requestPasswordReset();
+    if (parseResponse.success) {
+      Message.showSuccess(
+          context: context,
+          message: 'Password reset instructions have been sent to email!',
+          onPressed: () {
+            Navigator.of(context).pop();
+          });
+    } else {
+      Message.showError(context: context, message: parseResponse.error!.message);
+    }
+  }
+
+
+  
+
+        return Scaffold(
       body: Container(
         //color: Colors.amber,
         padding: EdgeInsets.only(
@@ -72,11 +91,11 @@ class _HomePageState extends State<login> {
               height: 60,
             ),
             TextFormField(
-              controller: controllerUsername,
+              controller: controllerEmail,
               autofocus: true,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                  labelText: "Usuário",
+                  labelText: "E-mail",
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(
@@ -86,25 +105,7 @@ class _HomePageState extends State<login> {
                   )),
               style: TextStyle(fontSize: 25),
             ),
-            SizedBox(
-              height: 25,
-            ),
-            TextFormField(
-              controller: controllerPassword,
-              autofocus: true,
-              keyboardType: TextInputType.text,
-              obscureText: true,
-              decoration: InputDecoration(
-                  labelText: "Senha",
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                  labelStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 30,
-                  )),
-              style: TextStyle(fontSize: 25),
-            ),
+            
             SizedBox(
               height: 50,
             ),
@@ -116,9 +117,9 @@ class _HomePageState extends State<login> {
                   padding: const EdgeInsets.all(16.0),
                   textStyle: const TextStyle(fontSize: 36),
                 ),
-                onPressed: () => doUserLogin(),
+                onPressed: () => doUserResetPassword(),
                 child: const Text(
-                  'Acessar',
+                  'Resetar Senha',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 5, 61, 7),
@@ -161,15 +162,32 @@ class _HomePageState extends State<login> {
           ],
         ),
       ),
+
+
+      
     );
+
+
+
+    
   }
 
-  void showSuccess(String message) {
+  
+
+
+  
+}
+
+class Message {
+  static void showSuccess(
+      {required BuildContext context,
+      required String message,
+      VoidCallback? onPressed}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Successo!"),
+          title: const Text("Success!"),
           titleTextStyle: TextStyle(
             color: Color.fromARGB(255, 0, 0, 0),
             fontWeight: FontWeight.bold,
@@ -177,22 +195,11 @@ class _HomePageState extends State<login> {
             fontFamily: 'Rancho',
             fontSize: 30,
           ),
-          content: Text(
-            message,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color.fromARGB(255, 0, 0, 0),
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              fontFamily: 'Rancho',
-              fontSize: 28,
-            ),
-          ),
+          content: Text(message),
           actions: <Widget>[
-            new TextButton(
-              child: const Text(
-                "OK",
-                style: TextStyle(
+            new ElevatedButton(
+              child: const Text("OK",
+              style: TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
@@ -201,10 +208,10 @@ class _HomePageState extends State<login> {
                 ),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => user()),
-                );
+                Navigator.of(context).pop();
+                if (onPressed != null) {
+                  onPressed();
+                }
               },
             ),
           ],
@@ -213,7 +220,10 @@ class _HomePageState extends State<login> {
     );
   }
 
-  void showError(String errorMessage) {
+  static void showError(
+      {required BuildContext context,
+      required String message,
+      VoidCallback? onPressed}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -226,120 +236,24 @@ class _HomePageState extends State<login> {
             fontFamily: 'Rancho',
             fontSize: 30,
           ),
-          contentTextStyle: TextStyle(
-            color: Color.fromARGB(255, 0, 0, 0),
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-            fontFamily: 'Rancho',
-            fontSize: 29,
-          ),
-          content: Text(errorMessage, 
-          textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color.fromARGB(255, 0, 0, 0),
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              fontFamily: 'Rancho',
-              fontSize: 28,
-            ),
-          
-          ),
-          
-          
+          content: Text(message),
           actions: <Widget>[
-            new TextButton(
-              child: const Text(
-                "OK",
-                style: TextStyle(
+            new ElevatedButton(
+              child: const Text("OK",
+              style: TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
                   fontFamily: 'Rancho',
                   fontSize: 20,
                 ),
+              
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void doUserLogin() async {
-    final email = controllerUsername.text.trim();
-    final password = controllerPassword.text.trim();
-
-    final user = ParseUser(email, password, null);
-
-    if (controllerUsername.text.isEmpty || controllerPassword.text.isEmpty) {
-      camposVazios();
-    } else {
-      var response = await user.login();
-
-      if (response.success) {
-        showSuccess("Usuário Logado!",
-
-        
-        );
-      } else {
-        showError(response.error!.message);
-      }
-    }
-  }
-
-  /*void doUserLogout() async {
-    final user = await ParseUser.currentUser() as ParseUser;
-    var response = await user.logout();
-
-    if (response.success) {
-      showSuccess("User was successfully logout!");
-      setState(() {
-        isLoggedIn = false;
-      });
-    } else {
-      showError(response.error!.message);
-    }
-  }*/
-
-  void camposVazios() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Erro!"),
-          titleTextStyle: TextStyle(
-            color: Color.fromARGB(255, 0, 0, 0),
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-            fontFamily: 'Rancho',
-            fontSize: 30,
-          ),
-          content: Text("Preencha todos os campos!"),
-          contentTextStyle: TextStyle(
-            color: Color.fromARGB(255, 0, 0, 0),
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-            fontFamily: 'Rancho',
-            fontSize: 25,
-          ),
-          actions: <Widget>[
-            new TextButton(
-              child: const Text(
-                "OK",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                  fontFamily: 'Rancho',
-                  fontSize: 20,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
+                if (onPressed != null) {
+                  onPressed();
+                }
               },
             ),
           ],

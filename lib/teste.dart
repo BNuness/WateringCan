@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/telaHistorico.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   final keyApplicationId = 'KFCvwGfsqOY4FcEqwfoHZrraw94mZpPCKnsCCiPq';
   final keyClientKey = 'GUPCMIHLimKOKsJtJDGbBBqHPGdEKJnYWrabAfsk';
   final keyParseServerUrl = 'https://parseapi.back4app.com';
@@ -13,7 +14,9 @@ void main() async {
   await Parse().initialize(keyApplicationId, keyParseServerUrl,
       clientKey: keyClientKey, debug: true);
 
-  
+  runApp(MaterialApp(
+    home:teste(),
+  ));
 }
 
 class teste extends StatefulWidget {
@@ -34,7 +37,7 @@ class _HomeState extends State<teste> {
         ),
         key: _scaffoldKey,
         body: FutureBuilder<List<ParseObject>>(
-            future: doUserQuery(),
+            future: doHistorico(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -61,23 +64,43 @@ class _HomeState extends State<teste> {
                         padding: EdgeInsets.only(top: 10.0),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          final user = snapshot.data![index] as ParseUser;
-                          final userVerified = user.emailVerified ?? false;
+                          final historico = snapshot.data![index];
+                          final horaA = historico.get<String>('horaAciona')!;
+                          final horaD = historico.get<String>('horaDesliga')!;
+                          final dataSensor = historico.get<DateTime>('data')!;
+                          final umidadeA = historico.get<String>('umidadeAciona')!;
+                          final umidadeD = historico.get<String>('umidadeDesliga')!;
+                          //final idSensor = historico.get<String>('idSensor')!;
+                          //final userVerified = user.emailVerified ?? false;
+                          
                           return ListTile(
                             title: Text(
-                                'Username: ${user?.get("teste")} - Verified: ${userVerified.toString()}'),
-                            subtitle: Text(user.createdAt.toString()),
+                                umidadeA.toString(),),
+                            subtitle: Text(dataSensor.toString()),
+                            
+                            trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(horaA),
+                                    ],
+
+
+                            ),
+
+
+
                           );
+                          
                         });
                   }
               }
             }));
   }
 
-  Future<List<ParseObject>> doUserQuery() async {
-    QueryBuilder<ParseUser> queryUsers = 
-        QueryBuilder<ParseUser>(ParseUser.forQuery());
-    final ParseResponse apiResponse = await queryUsers.query();
+  Future<List<ParseObject>> doHistorico() async {
+        QueryBuilder<ParseObject> queryHistorico =
+        QueryBuilder<ParseObject>(ParseObject('Historico'));
+    final ParseResponse apiResponse = await queryHistorico.query();
 
     if (apiResponse.success && apiResponse.results != null) {
       return apiResponse.results as List<ParseObject>;
@@ -85,5 +108,8 @@ class _HomeState extends State<teste> {
       return [];
     }
   }
-  //https://www.back4app.com/docs/flutter/parse-sdk/users/flutter-query-users
 }
+
+  
+  //https://www.back4app.com/docs/flutter/parse-sdk/users/flutter-query-users
+

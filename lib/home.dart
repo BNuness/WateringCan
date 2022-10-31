@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_3/loginpage.dart';
 import 'package:flutter_application_3/cadastro.dart';
+import 'package:flutter_application_3/resetPassword.dart';
 import 'package:flutter_application_3/telaUser.dart';
 import 'package:flutter_application_3/teste.dart';
 
@@ -46,7 +47,7 @@ class home extends StatelessWidget {
                   fontFamily: 'Rancho'),
             ),
             SizedBox(
-              height: 50,
+              height: 30,
             ),
             Container(
               height: 100,
@@ -75,7 +76,7 @@ class home extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 40,
+              height: 30,
             ),
             Container(
               height: 100,
@@ -104,12 +105,9 @@ class home extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 40, //150
+              height: 20, //150
             ),
 
-            SizedBox(
-              height: 40,
-            ),
             Container(
               height: 100,
               alignment: Alignment.center,
@@ -137,7 +135,7 @@ class home extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 150,
+              height: 50,
             ),
 
 
@@ -151,12 +149,19 @@ class home extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   textStyle: const TextStyle(fontSize: 28),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => reset()),
+                  );
+
+
+                },
                 child: const Text(
                   'Esqueci minha senha',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
+                    color: Color.fromARGB(255, 148, 24, 24),
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
                     fontFamily: 'Rancho',
