@@ -73,15 +73,15 @@ class _HomeState extends State<teste> {
                           //final idSensor = historico.get<String>('idSensor')!;
                           //final userVerified = user.emailVerified ?? false;
                           
-                          return ListTile(
-                            title: Text(
-                                umidadeA.toString(),),
-                            subtitle: Text(dataSensor.toString()),
+                          /*return ListTile(
+                            //title: Text(
+                                //umidadeA.toString(),),
+                            //subtitle: Text(dataSensor.toString()),
                             
                             trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(horaA),
+                                      Text(horaA),Text(umidadeA),Text(horaD),Text(umidadeA),Text(dataSensor.toString()),
                                     ],
 
 
@@ -89,9 +89,12 @@ class _HomeState extends State<teste> {
 
 
 
-                          );
+                          );*/
+
+                          
                           
                         });
+                        
                   }
               }
             }));

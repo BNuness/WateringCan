@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/sensorteste.dart';
+
 import 'package:flutter_application_3/telaSensor.dart';
 import 'package:flutter_application_3/telaHistorico.dart';
 
@@ -64,7 +64,7 @@ class user extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => sensorteste()),
+                    MaterialPageRoute(builder: (context) => sensor()),
                   );
 
 

@@ -94,7 +94,7 @@ class Historico extends StatelessWidget {
                    ]
                  ),
 
-                 /*TableRow(
+                 TableRow(
                    children: [
                       TableCell(child: Text("1.")),
                       TableCell(child: Text("Krishna Karki")),
@@ -119,7 +119,7 @@ class Historico extends StatelessWidget {
                       TableCell(child: Text("Berlin, Germany")),
                       TableCell(child: Text("Germany"))
                    ]
-                 ),*/
+                 ),
 
             ],),
 
