@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/Acionamento.dart';
 
 import 'package:flutter_application_3/telaSensor.dart';
 import 'package:flutter_application_3/telaHistorico.dart';
+import 'package:flutter_application_3/teste.dart';
 
+import 'TesteAciona.dart';
 import 'loginpage.dart';
 
 class user extends StatelessWidget {
@@ -136,7 +139,7 @@ class user extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Historico()),
+                    MaterialPageRoute(builder: (context) => teste()),
                   );
                 },
                 child: const Text(
@@ -155,8 +158,44 @@ class user extends StatelessWidget {
 
 
             SizedBox(
+              height: 40,
+            ),
+
+            Container(
+              height: 100,
+              alignment: Alignment.center,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  textStyle: const TextStyle(fontSize: 36),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AcionaTeste()),
+                  );
+                },
+                child: const Text(
+                  'Acionamento',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 5, 61, 7),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'Rancho',
+                  ),
+                ),
+              ),
+            ),
+
+
+
+            SizedBox(
               height: 50,
             ),
+
+
+
             Container(
               height: 100,
               alignment: Alignment.center,

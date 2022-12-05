@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_3/telaHistorico.dart';
+import 'package:flutter_application_3/telaSensor.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   final keyApplicationId = 'KFCvwGfsqOY4FcEqwfoHZrraw94mZpPCKnsCCiPq';
   final keyClientKey = 'GUPCMIHLimKOKsJtJDGbBBqHPGdEKJnYWrabAfsk';
   final keyParseServerUrl = 'https://parseapi.back4app.com';
@@ -15,7 +16,7 @@ void main() async {
       clientKey: keyClientKey, debug: true);
 
   runApp(MaterialApp(
-    home:teste(),
+    home: teste(),
   ));
 }
 
@@ -27,12 +28,39 @@ class teste extends StatefulWidget {
 class _HomeState extends State<teste> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  ParseUser? currentUser;
+
+  Future<ParseUser?> getUser() async {
+    currentUser = await ParseUser.currentUser() as ParseUser?;
+    return currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Parse Query Users"),
-          backgroundColor: Colors.blueAccent,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/imagens/icon2.png',
+                alignment: Alignment.topCenter,
+                fit: BoxFit.contain,
+                height: 55,
+              ),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Histórico",
+                    style: TextStyle(
+                        fontSize: 50,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        //fontWeight: FontWeight.bold,
+                        //fontStyle: FontStyle.italic,
+                        fontFamily: 'Rancho')),
+              )
+            ],
+          ),
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           centerTitle: true,
         ),
         key: _scaffoldKey,
@@ -64,50 +92,94 @@ class _HomeState extends State<teste> {
                         padding: EdgeInsets.only(top: 10.0),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          final historico = snapshot.data![index];
-                          final horaA = historico.get<String>('horaAciona')!;
-                          final horaD = historico.get<String>('horaDesliga')!;
-                          final dataSensor = historico.get<DateTime>('data')!;
-                          final umidadeA = historico.get<String>('umidadeAciona')!;
-                          final umidadeD = historico.get<String>('umidadeDesliga')!;
-                          //final idSensor = historico.get<String>('idSensor')!;
-                          //final userVerified = user.emailVerified ?? false;
-                          
-                          /*return ListTile(
-                            //title: Text(
-                                //umidadeA.toString(),),
-                            //subtitle: Text(dataSensor.toString()),
-                            
-                            trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(horaA),Text(umidadeA),Text(horaD),Text(umidadeA),Text(dataSensor.toString()),
-                                    ],
+                          ParseObject? sensor;
+                          final Historico1 = snapshot.data![index];
 
+                          final sensorident =
+                              Historico1.get<ParseObject>('sensorId')!;
+                          final nome = Historico1.get<String>('nome')!;
+                          final data = Historico1.get<DateTime>('createdAt')!;
 
-                            ),
-
-
-
-                          );*/
-
-                          
-                          
+                          return Row(
+                            children: [
+                              Text(
+                                  "ID: " +
+                                      '${sensorident.objectId}' +
+                                      '\n' +
+                                      "Nome: " +
+                                      nome.toString() +
+                                      '\n' +
+                                      'Data / Hora: ' +
+                                      data.toString() +
+                                      '\n',
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      //fontWeight: FontWeight.bold,
+                                      //fontStyle: FontStyle.italic,
+                                      fontFamily: 'Rancho')),
+                            ],
+                          );
                         });
-                        
                   }
               }
             }));
   }
 
   Future<List<ParseObject>> doHistorico() async {
-        QueryBuilder<ParseObject> queryHistorico =
-        QueryBuilder<ParseObject>(ParseObject('Historico'));
+    print('TRESTERSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
+
+    final currentUser = await getUser();
+    //final usuario  = currentUser!.get<ParseUser>('objectId')!;
+
+    print(currentUser);
+
+    final QueryBuilder<ParseObject> sensorQuery =
+        QueryBuilder<ParseObject>(ParseObject('Sensor'));
+
+    //sensorQuery.whereContains('nome', 'Sensor1');
+    sensorQuery.whereContains('user', (currentUser?.objectId).toString());
+
+    final ParseResponse sensorReponse = await sensorQuery.query();
+
+    ParseObject? sensor;
+
+    if (sensorReponse.success && sensorReponse.results != null) {
+      sensor = sensorReponse.results!.first as ParseObject;
+      print('22222222222222222222222222222222222222222222222222');
+      for (var o in sensorReponse.results!) {
+        print((o as ParseObject).toString());
+      }
+    }
+
+    if (sensor == null) {
+      print('333333333333333333333333333333333333333333333333333');
+      return [];
+    }
+
+    QueryBuilder<ParseObject> queryHistorico =
+        QueryBuilder<ParseObject>(ParseObject('Historico'))
+          ..whereMatchesQuery('sensorId', sensorQuery)
+          ..orderByAscending('nome')
+          ..orderByDescending('createdAt');
+
     final ParseResponse apiResponse = await queryHistorico.query();
 
     if (apiResponse.success && apiResponse.results != null) {
+      print(
+          'Aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee111111111111111111');
+
+      for (var o in apiResponse.results!) {
+        print((o as ParseObject).toString());
+      }
+
+      //return apiResponse.results as List<ParseObject>;
       return apiResponse.results as List<ParseObject>;
+      /*print(
+          'Aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee222222222222222222');*/
+      //return [];
     } else {
+      print('111111111111111111111111111111111111111111111111111');
+      //print(sensor.objectId);
       return [];
     }
   }

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/Acionamento.dart';
 import 'package:flutter_application_3/loginpage.dart';
 import 'package:flutter_application_3/cadastro.dart';
 import 'package:flutter_application_3/resetPassword.dart';
@@ -50,7 +51,7 @@ class home extends StatelessWidget {
               height: 30,
             ),
             Container(
-              height: 100,
+              height: 150,
               alignment: Alignment.center,
               child: TextButton(
                 style: TextButton.styleFrom(
@@ -108,7 +109,7 @@ class home extends StatelessWidget {
               height: 20, //150
             ),
 
-            Container(
+            /*Container(
               height: 100,
               alignment: Alignment.center,
               child: TextButton(
@@ -119,7 +120,7 @@ class home extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => teste()),
+                    MaterialPageRoute(builder: (context) => acionamento()),
                   );
                 },
                 child: const Text(
@@ -136,13 +137,13 @@ class home extends StatelessWidget {
             ),
             SizedBox(
               height: 50,
-            ),
+            ),*/
 
 
 
 
             Container(
-              height: 100,
+              height: 200,
               alignment: Alignment.center,
               child: TextButton(
                 style: TextButton.styleFrom(
